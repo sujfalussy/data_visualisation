@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dynamic Chart from URL</title>
+  <title>Dynamic Chart</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
@@ -17,39 +17,35 @@
   </style>
 </head>
 <body>
-  <h1>Dynamic Chart</h1>
+  <h1 id="chartTitle">Loading Chart...</h1>
   <canvas id="myChart" width="600" height="400"></canvas>
 
   <script>
-    // Parse URL parameters
+    // Get URL parameters
     const params = new URLSearchParams(window.location.search);
     const labels = params.get('labels')?.split(',') || [];
     const data = params.get('data')?.split(',').map(Number) || [];
+    const title = params.get('title') || 'My Chart';
+    const type = params.get('type') || 'bar';  // Default to bar chart
 
-    // Setup chart
+    // Set the page title and heading
+    document.title = title;
+    document.getElementById('chartTitle').textContent = title;
+
+    // Chart configuration
     const ctx = document.getElementById('myChart').getContext('2d');
     const chart = new Chart(ctx, {
-      type: 'line',
+      type: type,
       data: {
         labels: labels,
         datasets: [{
           label: 'Data Points',
           data: data,
-          borderColor: 'blue',
-          backgroundColor: 'rgba(0, 0, 255, 0.1)',
-          fill: true,
-          tension: 0.3
+          backgroundColor: 'rgba(0, 123, 255, 0.6)',
+          borderColor: 'rgba(0, 123, 255, 1)',
+          borderWidth: 1
         }]
       },
       options: {
         responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-  </script>
-</body>
-</html>
+        scales: type === 'bar' || type === 'line' ? {
